@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Sidebar } from './components/Sidebar';
 import { Dashboard } from './components/Dashboard';
 import { POS } from './components/POS';
@@ -36,7 +36,7 @@ const App: React.FC = () => {
 
   const { addToast } = useToast();
 
-  const handleLogin = (username: string, password: string):boolean => {
+  const handleLogin = useCallback((username: string, password: string):boolean => {
     const user = users.find(u => u.username === username && u.password === password);
     if (user) {
       setCurrentUser(user);
@@ -47,7 +47,13 @@ const App: React.FC = () => {
     }
     setLoginError('Usuario o contraseña incorrectos.');
     return false;
-  };
+  }, [users]);
+
+  // Automatically log in as admin to bypass the login screen on initial load.
+  useEffect(() => {
+    handleLogin('admin', 'admin123');
+  }, [handleLogin]);
+
 
   const handleLogout = () => {
     setCurrentUser(null);
