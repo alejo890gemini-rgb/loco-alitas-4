@@ -1,6 +1,6 @@
 import React from 'react';
 import type { View } from '../types';
-import { DashboardIcon, POSIcon, MenuBookIcon, TableIcon, ReportsIcon, ClipboardCheckIcon, WhatsAppIcon, InventoryIcon } from './Icons';
+import { DashboardIcon, POSIcon, MenuBookIcon, TableIcon, ClipboardCheckIcon, WhatsAppIcon, InventoryIcon } from './Icons';
 
 interface SidebarProps {
   currentView: View;
@@ -86,12 +86,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setCurrentView, c
             label="Monitor Cocina"
             isActive={currentView === 'KITCHEN'}
             onClick={() => handleNavClick('KITCHEN')}
-          />
-          <NavItem
-            icon={<ReportsIcon />}
-            label="Reportes"
-            isActive={currentView === 'REPORTS'}
-            onClick={() => handleNavClick('REPORTS')}
           />
           <NavItem
             icon={<WhatsAppIcon />}

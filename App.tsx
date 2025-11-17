@@ -4,7 +4,6 @@ import { Dashboard } from './components/Dashboard';
 import { POS } from './components/POS';
 import { MenuManager } from './components/MenuManager';
 import { TableManager } from './components/TableManager';
-import { Reports } from './components/Reports';
 import type { View, MenuItem, Table, Order, Sale, TableStatus, PaymentMethod, OrderStatus, InventoryItem, Ingredient } from './types';
 import { INITIAL_MENU_ITEMS, INITIAL_TABLES, INITIAL_INVENTORY_ITEMS } from './constants';
 import { MenuIcon, XIcon, ChatBotIcon } from './components/Icons';
@@ -182,8 +181,6 @@ const App: React.FC = () => {
           deleteTable={deleteTable}
           updateTableStatus={updateTableStatus} 
         />;
-      case 'REPORTS':
-        return <Reports sales={sales} tables={tables} />;
        case 'KITCHEN':
         return <KitchenMonitor orders={orders.filter(o => o.status === 'open')} updateOrderStatus={updateOrderStatus} tables={tables} />;
        case 'WHATSAPP':
