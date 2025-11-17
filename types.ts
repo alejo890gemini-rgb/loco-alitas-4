@@ -93,16 +93,6 @@ export interface Sale {
   paymentMethod: PaymentMethod;
 }
 
-// User Management Types
-export type Role = 'admin' | 'waiter';
-
-export interface User {
-  id: string;
-  username: string;
-  password: string; // In a real app this should be a hash
-  role: Role;
-}
-
 // Toast Notification Types
 export type ToastType = 'success' | 'error' | 'info';
 
@@ -110,4 +100,15 @@ export interface ToastMessage {
   id: string;
   message: string;
   type: ToastType;
+}
+
+// FIX: Add missing User and Role types for UserManager
+// User Management Types
+export type Role = 'admin' | 'waiter';
+
+export interface User {
+  id: string;
+  username: string;
+  password: string; // In a real app, this would be a hash
+  role: Role;
 }

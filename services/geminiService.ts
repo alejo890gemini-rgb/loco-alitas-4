@@ -100,43 +100,6 @@ export const getUpsellSuggestions = async (
   }
 };
 
-
-export interface ReportData {
-  totalRevenue: number;
-  totalOrders: number;
-  topSellingItems: { name: string; count: number }[];
-  revenueByPaymentMethod: Record<PaymentMethod, number>;
-}
-
-export const generateSalesReport = async (data: ReportData): Promise<string> => {
-    const prompt = `
-        You are a business analyst for a restaurant named "Loco Alitas". 
-        Analyze the following sales data for a specific period and generate a concise, insightful summary for the restaurant owner.
-        The summary should be a maximum of 100 words.
-        Highlight key trends, top-performing items, and suggest one potential area for improvement or a business opportunity.
-        Be professional, data-driven, and encouraging.
-
-        Sales Data:
-        - Total Revenue: ${data.totalRevenue.toFixed(0)} COP
-        - Total Orders: ${data.totalOrders}
-        - Top 3 Selling Items: ${data.topSellingItems.map(item => `${item.name} (${item.count} sold)`).join(', ')}
-        - Revenue by Payment Method: ${JSON.stringify(data.revenueByPaymentMethod)}
-
-        Provide the response as a single block of text in Spanish.
-    `;
-
-    try {
-        const response = await ai.models.generateContent({
-            model: 'gemini-2.5-flash',
-            contents: prompt,
-        });
-        return response.text.trim();
-    } catch (error) {
-        console.error("Error generating sales report:", error);
-        return "No se pudo generar el resumen del reporte. Por favor, intente de nuevo.";
-    }
-};
-
 export const getChatbotResponse = async (
   query: string,
   context: {
@@ -190,5 +153,63 @@ export const getChatbotResponse = async (
   } catch (error) {
     console.error("Error getting chatbot response:", error);
     return "Lo siento, tuve un problema para procesar tu pregunta. Inténtalo de nuevo.";
+  }
+};
+// FIX: Add missing ReportData interface and generateSalesReport function
+export interface ReportData {
+  totalRevenue: number;
+  totalOrders: number;
+  topSellingItems: { name: string; count: number }[];
+  revenueByPaymentMethod: Record<PaymentMethod, number>;
+}
+
+export const generateSalesReport = async (data: ReportData): Promise<string> => {
+  const prompt = `
+    System Instruction:
+    You are an expert business analyst for the "Loco Alitas" restaurant.
+    Your task is to provide a concise, insightful, and actionable summary based on the provided sales data.
+    Analyze the data and present key takeaways.
+    Keep the tone professional but encouraging.
+    The response MUST be in Spanish.
+
+    Context - Sales Data:
+    ---
+    - Total Revenue: ${data.totalRevenue.toFixed(0)} COP
+    - Total Orders: ${data.totalOrders}
+    - Top Selling Items:
+      ${data.topSellingItems.map(item => `  - ${item.name}: ${item.count} units sold`).join('\n')}
+    - Revenue by Payment Method:
+      ${Object.entries(data.revenueByPaymentMethod).map(([method, amount]) => `  - ${method}: ${amount.toFixed(0)} COP`).join('\n')}
+    ---
+
+    Based on this data, provide a short summary including:
+    1. A general overview of the performance.
+    2. An observation about the top-selling items.
+    3. A suggestion or insight based on the payment methods.
+    4. A concluding remark.
+
+    Example Response Structure (use your own words):
+    "**Análisis de Ventas:**
+    El rendimiento general es [positivo/estable/mejorable], con ingresos de [Total Revenue] a través de [Total Orders] órdenes.
+    
+    **Platillos Estrella:**
+    [Observation about top items, e.g., 'Locaburguer' sigue siendo el favorito indiscutible, lo que indica una fuerte preferencia por nuestras hamburguesas.]
+
+    **Métodos de Pago:**
+    [Insight on payment methods, e.g., Se observa una alta preferencia por el pago en efectivo. Considerar promociones para pagos con tarjeta podría diversificar los ingresos.]
+
+    **Conclusión:**
+    [Concluding remark, e.g., ¡Buen trabajo! Sigamos enfocados en la calidad de nuestros productos más populares.]"
+  `;
+
+  try {
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: prompt,
+    });
+    return response.text.trim();
+  } catch (error) {
+    console.error("Error generating sales report:", error);
+    return "No se pudo generar el resumen. Por favor, inténtelo de nuevo.";
   }
 };
