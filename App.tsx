@@ -28,9 +28,12 @@ const App: React.FC = () => {
   const [orderForTicket, setOrderForTicket] = useState<Order | null>(null);
   const [isChatbotOpen, setChatbotOpen] = useState(false);
 
-  // Auth state
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  // Find the admin user from constants to set the initial state.
+  const adminUser = INITIAL_USERS.find(user => user.username === 'admin');
+
+  // Auth state initialized to log in the admin user directly, preventing render issues.
+  const [isAuthenticated, setIsAuthenticated] = useState(!!adminUser);
+  const [currentUser, setCurrentUser] = useState<User | null>(adminUser || null);
   const [users, setUsers] = useState<User[]>(INITIAL_USERS);
   const [loginError, setLoginError] = useState('');
 
@@ -48,12 +51,6 @@ const App: React.FC = () => {
     setLoginError('Usuario o contraseña incorrectos.');
     return false;
   }, [users]);
-
-  // Automatically log in as admin to bypass the login screen on initial load.
-  useEffect(() => {
-    handleLogin('admin', 'admin123');
-  }, [handleLogin]);
-
 
   const handleLogout = () => {
     setCurrentUser(null);
