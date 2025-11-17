@@ -1,6 +1,6 @@
 
 
-import type { MenuItem, Sauce, Table, User, InventoryItem } from './types';
+import type { MenuItem, Sauce, Table, InventoryItem } from './types';
 
 export const SALSAS_ALITAS: Sauce[] = [
     { name: "BBQ", key: "BBQ" },
@@ -151,11 +151,6 @@ export const INITIAL_TABLES: Table[] = [
   { id: 't-6', name: 'Barra 1', capacity: 1, status: 'available', x: 500, y: 50 },
   { id: 't-7', name: 'Barra 2', capacity: 1, status: 'available', x: 500, y: 120 },
   { id: 't-8', name: 'Patio 1', capacity: 8, status: 'available', x: 350, y: 200 },
-];
-
-export const INITIAL_USERS: User[] = [
-    { id: 'user-1', username: 'admin', password: 'admin123', role: 'admin' },
-    { id: 'user-2', username: 'mesero', password: 'mesero123', role: 'waiter' },
 ];
 
 export const INITIAL_INVENTORY_ITEMS: InventoryItem[] = [

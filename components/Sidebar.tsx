@@ -1,12 +1,11 @@
 import React from 'react';
-import type { View, User } from '../types';
-import { DashboardIcon, POSIcon, MenuBookIcon, TableIcon, ReportsIcon, UsersIcon, LogoutIcon, ClipboardCheckIcon, WhatsAppIcon, InventoryIcon } from './Icons';
+import type { View } from '../types';
+import { DashboardIcon, POSIcon, MenuBookIcon, TableIcon, ReportsIcon, ClipboardCheckIcon, WhatsAppIcon, InventoryIcon } from './Icons';
 
 interface SidebarProps {
   currentView: View;
   setCurrentView: (view: View) => void;
   closeSidebar: () => void;
-  user: User;
 }
 
 const NavItem: React.FC<{
@@ -37,13 +36,11 @@ const NavItem: React.FC<{
   </li>
 );
 
-export const Sidebar: React.FC<SidebarProps> = ({ currentView, setCurrentView, closeSidebar, user }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ currentView, setCurrentView, closeSidebar }) => {
   const handleNavClick = (view: View) => {
     setCurrentView(view);
     closeSidebar();
   };
-  
-  const isAdmin = user.role === 'admin';
 
   return (
     <div className="flex flex-col h-full bg-[var(--card-bg)] text-white">
@@ -54,14 +51,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setCurrentView, c
       </div>
       <nav className="flex-1 p-4 overflow-y-auto">
         <ul>
-          {isAdmin && (
-            <NavItem
-              icon={<DashboardIcon />}
-              label="Dashboard"
-              isActive={currentView === 'DASHBOARD'}
-              onClick={() => handleNavClick('DASHBOARD')}
-            />
-          )}
+          <NavItem
+            icon={<DashboardIcon />}
+            label="Dashboard"
+            isActive={currentView === 'DASHBOARD'}
+            onClick={() => handleNavClick('DASHBOARD')}
+          />
           <NavItem
             icon={<POSIcon />}
             label="POS"
@@ -74,53 +69,40 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setCurrentView, c
             isActive={currentView === 'TABLES'}
             onClick={() => handleNavClick('TABLES')}
           />
-          {isAdmin && (
-            <>
-              <NavItem
-                icon={<MenuBookIcon />}
-                label="Menú"
-                isActive={currentView === 'MENU'}
-                onClick={() => handleNavClick('MENU')}
-              />
-               <NavItem
-                icon={<InventoryIcon />}
-                label="Inventario"
-                isActive={currentView === 'INVENTORY'}
-                onClick={() => handleNavClick('INVENTORY')}
-              />
-               <NavItem
-                icon={<ClipboardCheckIcon />}
-                label="Monitor Cocina"
-                isActive={currentView === 'KITCHEN'}
-                onClick={() => handleNavClick('KITCHEN')}
-              />
-              <NavItem
-                icon={<ReportsIcon />}
-                label="Reportes"
-                isActive={currentView === 'REPORTS'}
-                onClick={() => handleNavClick('REPORTS')}
-              />
-              <NavItem
-                icon={<UsersIcon />}
-                label="Usuarios"
-                isActive={currentView === 'USERS'}
-                onClick={() => handleNavClick('USERS')}
-              />
-              <NavItem
-                icon={<WhatsAppIcon />}
-                label="WhatsApp"
-                isActive={currentView === 'WHATSAPP'}
-                onClick={() => handleNavClick('WHATSAPP')}
-              />
-            </>
-          )}
+          <NavItem
+            icon={<MenuBookIcon />}
+            label="Menú"
+            isActive={currentView === 'MENU'}
+            onClick={() => handleNavClick('MENU')}
+          />
+           <NavItem
+            icon={<InventoryIcon />}
+            label="Inventario"
+            isActive={currentView === 'INVENTORY'}
+            onClick={() => handleNavClick('INVENTORY')}
+          />
+           <NavItem
+            icon={<ClipboardCheckIcon />}
+            label="Monitor Cocina"
+            isActive={currentView === 'KITCHEN'}
+            onClick={() => handleNavClick('KITCHEN')}
+          />
+          <NavItem
+            icon={<ReportsIcon />}
+            label="Reportes"
+            isActive={currentView === 'REPORTS'}
+            onClick={() => handleNavClick('REPORTS')}
+          />
+          <NavItem
+            icon={<WhatsAppIcon />}
+            label="WhatsApp"
+            isActive={currentView === 'WHATSAPP'}
+            onClick={() => handleNavClick('WHATSAPP')}
+          />
         </ul>
       </nav>
       <div className="p-4 border-t border-[var(--card-border)]">
-        <div className="p-3 rounded-lg bg-black/20 mb-4">
-            <p className="text-sm text-white font-semibold">{user.username}</p>
-            <p className="text-xs text-gray-400 capitalize">{user.role === 'admin' ? 'Administrador' : 'Mesero'}</p>
-        </div>
+        {/* User info removed for simplicity */}
       </div>
     </div>
   );

@@ -5,11 +5,10 @@ import { POS } from './components/POS';
 import { MenuManager } from './components/MenuManager';
 import { TableManager } from './components/TableManager';
 import { Reports } from './components/Reports';
-import type { View, MenuItem, Table, Order, Sale, TableStatus, User, Role, PaymentMethod, OrderStatus, InventoryItem, Ingredient } from './types';
-import { INITIAL_MENU_ITEMS, INITIAL_TABLES, INITIAL_USERS, INITIAL_INVENTORY_ITEMS } from './constants';
+import type { View, MenuItem, Table, Order, Sale, TableStatus, PaymentMethod, OrderStatus, InventoryItem, Ingredient } from './types';
+import { INITIAL_MENU_ITEMS, INITIAL_TABLES, INITIAL_INVENTORY_ITEMS } from './constants';
 import { MenuIcon, XIcon, ChatBotIcon } from './components/Icons';
 import { KitchenTicketModal } from './components/KitchenTicketModal';
-import { UserManager } from './components/UserManager';
 import { useToast } from './hooks/useToast';
 import { KitchenMonitor } from './components/KitchenMonitor';
 import { WhatsAppManager } from './components/WhatsAppManager';
@@ -26,18 +25,8 @@ const App: React.FC = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [orderForTicket, setOrderForTicket] = useState<Order | null>(null);
   const [isChatbotOpen, setChatbotOpen] = useState(false);
-
-  // Hardcode the admin user. The entire app now runs under this user.
-  const [users, setUsers] = useState<User[]>(INITIAL_USERS);
-  const currentUser = users.find(user => user.role === 'admin');
   
   const { addToast } = useToast();
-
-  const addUser = (user: Omit<User, 'id'>) => {
-    const newUser = { ...user, id: `user-${Date.now()}` };
-    setUsers(prev => [...prev, newUser]);
-    addToast('Usuario creado con éxito', 'success');
-  };
 
   const addMenuItem = useCallback((item: Omit<MenuItem, 'id'>) => {
     const newItem: MenuItem = {
@@ -195,8 +184,6 @@ const App: React.FC = () => {
         />;
       case 'REPORTS':
         return <Reports sales={sales} tables={tables} />;
-       case 'USERS':
-        return <UserManager users={users} addUser={addUser} />;
        case 'KITCHEN':
         return <KitchenMonitor orders={orders.filter(o => o.status === 'open')} updateOrderStatus={updateOrderStatus} tables={tables} />;
        case 'WHATSAPP':
@@ -213,18 +200,6 @@ const App: React.FC = () => {
     }
   };
 
-  if (!currentUser) {
-    return (
-      <div className="flex items-center justify-center h-screen bg-black text-white">
-        <div className="text-center p-8 border border-red-500 rounded-lg">
-          <h1 className="text-2xl font-bold text-red-500">Error de Configuración</h1>
-          <p>El usuario administrador no se encuentra en los datos iniciales.</p>
-          <p>Por favor, revise el archivo `constants.ts`.</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <>
       <div className="flex h-screen bg-[var(--black-bg)] text-gray-100">
@@ -233,7 +208,6 @@ const App: React.FC = () => {
             currentView={currentView} 
             setCurrentView={setCurrentView} 
             closeSidebar={() => setSidebarOpen(false)}
-            user={currentUser}
           />
         </div>
         

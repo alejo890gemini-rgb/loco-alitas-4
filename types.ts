@@ -1,4 +1,4 @@
-export type View = 'DASHBOARD' | 'POS' | 'MENU' | 'TABLES' | 'REPORTS' | 'USERS' | 'KITCHEN' | 'WHATSAPP' | 'INVENTORY';
+export type View = 'DASHBOARD' | 'POS' | 'MENU' | 'TABLES' | 'REPORTS' | 'KITCHEN' | 'WHATSAPP' | 'INVENTORY';
 
 // This is now a string to accommodate descriptive categories
 export type MenuItemCategory = string;
@@ -93,13 +93,14 @@ export interface Sale {
   paymentMethod: PaymentMethod;
 }
 
-// Auth Types
+// Fix: Added missing User and Role types for UserManager component.
+// User Management Types
 export type Role = 'admin' | 'waiter';
 
 export interface User {
   id: string;
   username: string;
-  password?: string; // Password should be handled securely, this is for simplicity
+  password?: string; // Password may not always be present in user objects passed around
   role: Role;
 }
 
