@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Sidebar } from './components/Sidebar';
 import { Dashboard } from './components/Dashboard';
 import { POS } from './components/POS';
@@ -9,7 +9,6 @@ import type { View, MenuItem, Table, Order, Sale, TableStatus, User, Role, Payme
 import { INITIAL_MENU_ITEMS, INITIAL_TABLES, INITIAL_USERS, INITIAL_INVENTORY_ITEMS } from './constants';
 import { MenuIcon, XIcon, ChatBotIcon } from './components/Icons';
 import { KitchenTicketModal } from './components/KitchenTicketModal';
-import { Login } from './components/Login';
 import { UserManager } from './components/UserManager';
 import { useToast } from './hooks/useToast';
 import { KitchenMonitor } from './components/KitchenMonitor';
@@ -28,38 +27,11 @@ const App: React.FC = () => {
   const [orderForTicket, setOrderForTicket] = useState<Order | null>(null);
   const [isChatbotOpen, setChatbotOpen] = useState(false);
 
-  // Find the admin user from constants to set the initial state.
-  const adminUser = INITIAL_USERS.find(user => user.username === 'admin');
-
-  // Auth state initialized to log in the admin user directly, preventing render issues.
-  const [isAuthenticated, setIsAuthenticated] = useState(!!adminUser);
-  const [currentUser, setCurrentUser] = useState<User | null>(adminUser || null);
+  // Hardcode the admin user. The entire app now runs under this user.
   const [users, setUsers] = useState<User[]>(INITIAL_USERS);
-  const [loginError, setLoginError] = useState('');
-
+  const currentUser = users.find(user => user.role === 'admin');
+  
   const { addToast } = useToast();
-
-  const handleLogin = useCallback((username: string, password: string):boolean => {
-    const user = users.find(u => u.username === username && u.password === password);
-    if (user) {
-      setCurrentUser(user);
-      setIsAuthenticated(true);
-      setLoginError('');
-      setCurrentView('DASHBOARD'); // Reset to dashboard on login
-      return true;
-    }
-    setLoginError('Usuario o contraseña incorrectos.');
-    return false;
-  }, [users]);
-
-  const handleLogout = () => {
-    setCurrentUser(null);
-    setIsAuthenticated(false);
-    // Reset session-specific state to prevent data leakage between users
-    setOrders([]);
-    setSales([]);
-    setOrderForTicket(null);
-  };
 
   const addUser = (user: Omit<User, 'id'>) => {
     const newUser = { ...user, id: `user-${Date.now()}` };
@@ -241,8 +213,16 @@ const App: React.FC = () => {
     }
   };
 
-  if (!isAuthenticated || !currentUser) {
-    return <Login onLogin={handleLogin} error={loginError} />;
+  if (!currentUser) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-black text-white">
+        <div className="text-center p-8 border border-red-500 rounded-lg">
+          <h1 className="text-2xl font-bold text-red-500">Error de Configuración</h1>
+          <p>El usuario administrador no se encuentra en los datos iniciales.</p>
+          <p>Por favor, revise el archivo `constants.ts`.</p>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -254,7 +234,6 @@ const App: React.FC = () => {
             setCurrentView={setCurrentView} 
             closeSidebar={() => setSidebarOpen(false)}
             user={currentUser}
-            onLogout={handleLogout}
           />
         </div>
         

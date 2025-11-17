@@ -7,7 +7,6 @@ interface SidebarProps {
   setCurrentView: (view: View) => void;
   closeSidebar: () => void;
   user: User;
-  onLogout: () => void;
 }
 
 const NavItem: React.FC<{
@@ -38,7 +37,7 @@ const NavItem: React.FC<{
   </li>
 );
 
-export const Sidebar: React.FC<SidebarProps> = ({ currentView, setCurrentView, closeSidebar, user, onLogout }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ currentView, setCurrentView, closeSidebar, user }) => {
   const handleNavClick = (view: View) => {
     setCurrentView(view);
     closeSidebar();
@@ -122,13 +121,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setCurrentView, c
             <p className="text-sm text-white font-semibold">{user.username}</p>
             <p className="text-xs text-gray-400 capitalize">{user.role === 'admin' ? 'Administrador' : 'Mesero'}</p>
         </div>
-        <button
-          onClick={onLogout}
-          className="w-full flex items-center justify-center p-3 text-sm rounded-lg bg-white/5 text-gray-400 hover:bg-red-900/40 hover:text-white transition-colors duration-200"
-        >
-          <LogoutIcon />
-          <span className="ml-3">Cerrar Sesión</span>
-        </button>
       </div>
     </div>
   );
